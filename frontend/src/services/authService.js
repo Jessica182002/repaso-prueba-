@@ -16,6 +16,7 @@ export const registerUser = async ({ email, password }) => {
   if (!res.ok) throw new Error(data.error || "Error al registrar");
   return data;
 };
+
 export const loginUser = async ({ email, password }) => {
   const res = await fetch(`${API_URL}/api/auth/login`, {
     method: "POST",

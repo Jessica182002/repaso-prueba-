@@ -13,7 +13,7 @@ export default function Register() {
   const validate = () => {
     const e = {};
     if (!form.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) e.email = "Correo inválido";
-    if (form.password.length < 4) e.password = "Mínimo 4 caracteres";
+    if (form.password.length < 6) e.password = "Mínimo 6 caracteres";
     if (form.password !== form.confirm) e.confirm = "Las contraseñas no coinciden";
     return e;
   };
@@ -45,7 +45,7 @@ export default function Register() {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <Field type="email"    label="Correo electrónico" placeholder="jane@example.com"    value={form.email}    onChange={set("email")}    error={errors.email}    required clearable />
-          <Field type="password" label="Contraseña"         placeholder="Mínimo 4 caracteres" value={form.password} onChange={set("password")} error={errors.password} required />
+          <Field type="password" label="Contraseña"         placeholder="Mínimo 6 caracteres" value={form.password} onChange={set("password")} error={errors.password} required />
           <Field type="password" label="Confirmar contraseña" placeholder="Repite tu contraseña" value={form.confirm} onChange={set("confirm")} error={errors.confirm} required success={form.confirm.length > 0 && form.confirm === form.password} />
 
           <Button type="submit" fullWidth loading={loading} className="mt-2">
