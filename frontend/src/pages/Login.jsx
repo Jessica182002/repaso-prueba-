@@ -1,11 +1,14 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Field } from "../components/Field";
 import { Button } from "../components/Button";
+import { loginUser } from "../services/authService";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
 
@@ -13,11 +16,16 @@ export default function Login() {
     e.preventDefault();
     if (!form.email || !form.password) { setError("Completa todos los campos"); return; }
     setError("");
+
     setLoading(true);
-    // simulate request
-    await new Promise((r) => setTimeout(r, 1500));
-    setLoading(false);
-    console.log("Login:", form);
+    try {
+      await loginUser({ email: form.email, password: form.password });
+      navigate("/inventory");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -32,13 +40,9 @@ export default function Login() {
           <Field type="email"    label="Correo electrónico" placeholder="jane@example.com" value={form.email}    onChange={set("email")}    required clearable />
           <Field type="password" label="Contraseña"         placeholder="Tu contraseña"    value={form.password} onChange={set("password")} required />
 
-          <div className="flex justify-end -mt-2">
-            <a href="/forgot-password" className="text-xs text-indigo-600 hover:underline">¿Olvidaste tu contraseña?</a>
-          </div>
-
           {error && <p className="text-xs text-red-500">{error}</p>}
 
-          <Button type="submit" fullWidth loading={loading} className="mt-1">
+          <Button type="submit" fullWidth loading={loading}>
             {loading ? "Iniciando sesión…" : "Iniciar sesión"}
           </Button>
         </form>
