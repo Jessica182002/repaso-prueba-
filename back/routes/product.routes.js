@@ -8,12 +8,9 @@ router.use(verifyToken);
 
 // GET /api/products - listar todos los productos del usuario
 router.get('/', async (req, res) => {
-  const userId = req.user.sub; // el ID del usuario viene del JWT
-
   const { data, error } = await supabase
     .from('products')
     .select('*')
-    .eq('user_id', userId)
     .order('created_at', { ascending: false });
 
   if (error) {
@@ -25,7 +22,7 @@ router.get('/', async (req, res) => {
 
 // POST /api/products - crear un nuevo producto
 router.post('/', async (req, res) => {
-  const userId = req.user.sub;
+  const userId = req.user.id;
   const { name, description, quantity, price } = req.body;
 
   if (!name || quantity === undefined || price === undefined) {
@@ -47,7 +44,7 @@ router.post('/', async (req, res) => {
 
 // DELETE /api/products/:id - eliminar un producto
 router.delete('/:id', async (req, res) => {
-  const userId = req.user.sub;
+  const userId = req.user.id;
   const { id } = req.params;
 
   // Verificar que el producto pertenece al usuario antes de eliminar
